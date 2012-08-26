@@ -8,9 +8,7 @@ Author: Frédéric "Fredy31" Pilon
 Author URI: http://www.fredericpilon.com
 License: GPL2
 */
-?>
 
-<?php
     add_action( 'init', 'fp_stm_create_matches_pt' );
     /**
      * Creates the "Games" post type. Used to register games played by the team.
@@ -83,6 +81,14 @@ License: GPL2
             'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
         );
         register_post_type('stm_players',$args);
+    }
+    
+    /*
+     * If is administration, loads the administration.
+     */
+    
+    if ( is_admin() ){
+        include_once 'admin/admin.php';
     }
 
 ?>
