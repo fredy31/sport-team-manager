@@ -3,7 +3,7 @@
 /*
  * Creates the managing administration
  */
-
+    
     register_activation_hook(__FILE__, 'fp_stm_add_defaults_fn');
     
     /*
@@ -29,6 +29,12 @@
      *
      */
     function fp_stm_build_options_page(){
+        //Add JS needed to run the admin
+        wp_enqueue_script('media-upload');
+        wp_enqueue_script('thickbox');
+        wp_register_script( 'fp_stm_admin_js', plugins_url( 'admin.js', __FILE__ ), array('jquery','media-upload','thickbox') );
+        wp_enqueue_script('fp_stm_admin_js');
+        wp_enqueue_style('thickbox');
         ?>
         <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
@@ -54,9 +60,14 @@
      *      Determine winner by number of innings won or innings score combined?
      */
     function fp_stm_register_admin_settings(){
-        register_setting( 'fp_stm_admin_options_group', 'fp_stm_admin_options_group', 'fp_stm_general_settings_validate' );
+        register_setting( 'fp_stm_admin_options_group', 'fp_stm_admin_options', 'fp_stm_general_settings_validate' );
         
         add_settings_section('fp_stm_main_settings', __('General Plugin Settings'), 'fp_stm_main_settings', __FILE__);
+        
+        add_settings_field('fp_stm_team_logo', __('Team logo'), 'fp_stm_show_team_logo', __FILE__, 'fp_stm_main_settings' );
+        
+        add_settings_field('fp_stm_team_name', __('Team Name'), 'fp_stm_show_team_name', __FILE__, 'fp_stm_main_settings' );
+        add_settings_field('fp_stm_team_abbr', __('Team Abbreviation'), 'fp_stm_show_team_abbr', __FILE__, 'fp_stm_main_settings' );
         
         add_settings_field('fp_stm_win_or_points', __('Win or Number of points?'), 'fp_stm_show_win_or_points', __FILE__, 'fp_stm_main_settings' );
         add_settings_field('fp_stm_combine_or_innings', __('Win by combined points or innings won?'), 'fp_stm_show_combine_or_innings', __FILE__, 'fp_stm_main_settings' );
@@ -66,15 +77,46 @@
      * Adds a text before the options on the option page.
      */
     function fp_stm_main_settings(){
-        echo __('<p>Here are the main settings of the plugin</p>');
+        echo '<p>' . __('Here are the main settings of the plugin') . '</p>';
+    }
+    
+    /*
+     * Creates the team logo field (image)
+     */
+    function fp_stm_show_team_logo(){
+        $options = get_option('fp_stm_admin_options');
+        $fp_stm_last_img_url = wp_get_attachment_image_src($options['team_logo'],'thumbnail');
+        if(isset($fp_stm_last_img_url[0])){
+            echo '<div id="fp_stm_team_logo_admin"><img src="'.$fp_stm_last_img_url[0].'" /></div>';
+        }else{
+            echo '<div id="fp_stm_team_logo_admin" style="display:none;"></div>';
+        }
+        echo '  <input class="upload" type="hidden" name="plugin_options[team_logo]" value="'.$fp_stm_last_img_url[0].'" />
+                <input class="upload-button" type="button" name="wsl-image-add" value="'.__('Upload Image').'" />
+                <input class="delete-button" type="button" name="" value="'.__('Delete image').'" />';
+    }
+    
+    /*
+     * Creates the Win or Score Field (Radio Button)
+     */
+    function fp_stm_show_team_name(){
+        $options = get_option('fp_stm_admin_options');
+	echo "<label><input value='".$options["team_name"]."' name='plugin_options[team_name]' type='text' /></label><br />";
+    }
+    
+    /*
+     * Creates the Win or Score Field (Radio Button)
+     */
+    function fp_stm_show_team_abbr(){
+        $options = get_option('fp_stm_admin_options');
+	echo "<label><input value='".$options["team_abbr"]."' name='plugin_options[team_abbr]' type='text' /></label><br />";
     }
     
     /*
      * Creates the Win or Score Field (Radio Button)
      */
     function fp_stm_show_win_or_points(){
-        $options = get_option('fp_stm_admin_options_group');
-                    print_r($options);
+        $options = get_option('fp_stm_admin_options');
 	$items = array("Win", "Points");
 	foreach($items as $item) {
 		$checked = ($options['win_points']==$item) ? ' checked="checked" ' : '';
@@ -86,7 +128,7 @@
      * Creates the Combined or Innings Field (Radio Button)
      */
     function fp_stm_show_combine_or_innings(){
-        $options = get_option('fp_stm_admin_options_group');
+        $options = get_option('fp_stm_admin_options');
 	$items = array("Combined", "Innings");
 	foreach($items as $item) {
 		$checked = ($options['comb_inn']==$item) ? ' checked="checked" ' : '';
@@ -99,8 +141,23 @@
      */
     function fp_stm_general_settings_validate($input){
         // Check our textbox option field contains no HTML tags - if so strip them out
-	$input['text_string'] =  wp_filter_nohtml_kses($input['text_string']);	
-	return $input; // return validated input
+        
+        $_POST['plugin_options']['team_logo'] = get_attachment_id_from_src($_POST['plugin_options']['team_logo']);
+        
+	return $_POST['plugin_options']; // return validated input
+    }
+    
+    /*
+     * Gives out ID of the image when is uploaded (makes it easier to manipulate the image afterwards)
+     * 
+     */    
+    function get_attachment_id_from_src ($image_src) {
+
+        global $wpdb;
+        $query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
+        $id = $wpdb->get_var($query);
+        return $id;
+
     }
     
 ?>

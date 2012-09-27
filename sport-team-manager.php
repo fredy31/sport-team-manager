@@ -89,6 +89,7 @@ License: GPL2
     
     if ( is_admin() ){
         include_once 'admin/admin.php';
+        include_once 'games/meta.php';
     }
 
 ?>

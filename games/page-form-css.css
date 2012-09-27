@@ -1,0 +1,16 @@
+.fp_stm_meta_page{
+    width:100%;
+}
+
+.fp_stm_meta_page th img{
+    width:100px;
+    height:100px;
+}
+
+.fp_stm_meta_page th.fp_stm_first_col img{
+    float:right;
+}
+
+.fp_stm_meta_page th.fp_stm_last_col img{
+    float:left;
+}
