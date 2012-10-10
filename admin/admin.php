@@ -120,7 +120,7 @@
 	$items = array("Win", "Points");
 	foreach($items as $item) {
 		$checked = ($options['win_points']==$item) ? ' checked="checked" ' : '';
-		echo "<label><input ".$checked." value='$item' name='plugin_options[win_points]' type='radio' /> $item</label><br />";
+		echo "<label><input ".$checked." value='$item' name='plugin_options[win_points]' type='radio' />$item</label><br />";
 	}
     }
     
@@ -132,7 +132,7 @@
 	$items = array("Combined", "Innings");
 	foreach($items as $item) {
 		$checked = ($options['comb_inn']==$item) ? ' checked="checked" ' : '';
-		echo "<label><input ".$checked." value='$item' name='plugin_options[comb_inn]' type='radio' /> $item</label><br />";
+		echo "<label><input ".$checked." value='$item' name='plugin_options[comb_inn]' type='radio' />$item</label><br />";
 	}
     }
     

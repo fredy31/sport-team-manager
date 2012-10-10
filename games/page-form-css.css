@@ -7,10 +7,31 @@
     height:100px;
 }
 
+.fp_stm_meta_page input{
+    width:100%;
+}
+
 .fp_stm_meta_page th.fp_stm_first_col img{
     float:right;
 }
 
 .fp_stm_meta_page th.fp_stm_last_col img{
     float:left;
+}
+
+#poststuff th.fp_stm_first_col h2, #poststuff th.fp_stm_last_col h2{
+    clear:none;
+}
+
+.fp_stm_period_col{
+    text-align:center;
+}
+
+.fp_stm_right{
+    text-align:right;
+    float:right;
+}
+
+.fp_stm_remove_col{
+    width:26px;
 }
