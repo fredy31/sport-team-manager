@@ -10,6 +10,7 @@ License: GPL2
 */
 
     add_action( 'init', 'fp_stm_create_matches_pt' );
+
     /**
      * Creates the "Games" post type. Used to register games played by the team.
      */
@@ -41,7 +42,7 @@ License: GPL2
             'has_archive' => true, 
             'hierarchical' => false,
             'menu_position' => null,
-            'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
+            'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' )
         );
         register_post_type('stm_games',$args);
     }
@@ -78,7 +79,7 @@ License: GPL2
             'has_archive' => true, 
             'hierarchical' => false,
             'menu_position' => null,
-            'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
+            'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' )
         );
         register_post_type('stm_players',$args);
     }
@@ -91,5 +92,11 @@ License: GPL2
         include_once 'admin/admin.php';
         include_once 'games/meta.php';
     }
+
+    /*
+     * Saves games info
+     */
+
+    include_once 'games/page_save.php';
 
 ?>

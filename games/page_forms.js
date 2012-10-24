@@ -12,12 +12,21 @@ jQuery('document').ready(function(){
 })
 
 function fp_stm_setRowNumbers(){
-    var currentRowNumber = 1;
+    var currentRowNumber = 0;
     
     jQuery('.fp_stm_row_periods').each(function(){
-        jQuery(this).find('.fp_stm_period_col').html(currentRowNumber);
         currentRowNumber++;
+        jQuery(this).find( '.fp_stm_period_col' ).html( currentRowNumber );
+
+        jQuery(this).find( '.fp_stm_first_col input' ).attr( 'id', 'fp_stm_local_' + currentRowNumber )
+        jQuery(this).find( '.fp_stm_last_col input' ).attr( 'id', 'fp_stm_ennemy_' + currentRowNumber )
+
+        jQuery(this).find( '.fp_stm_first_col input' ).attr( 'name', 'fp_stm_local_' + currentRowNumber )
+        jQuery(this).find( '.fp_stm_last_col input' ).attr( 'name', 'fp_stm_ennemy_' + currentRowNumber )
     })
+
+    jQuery('#fp_stm_nbPeriods').val(currentRowNumber);
+
 }
 
 function fp_stm_removeRow(objectToRemove){

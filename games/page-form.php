@@ -74,3 +74,5 @@
         </td>
     </tr>
 </table>
+
+<input type="hidden" value="" id="fp_stm_nbPeriods" name="fp_stm_nbPeriods" />
