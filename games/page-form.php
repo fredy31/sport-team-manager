@@ -18,6 +18,8 @@
     wp_register_script( 'fp_stm_page_forms_js', plugins_url( 'page_forms.js', __FILE__ ), array('jquery','media-upload','thickbox') );
     wp_enqueue_script('fp_stm_page_forms_js');
     wp_enqueue_style('thickbox');
+
+    $options = get_option('fp_stm_admin_options');
 ?>
 
 <h4><?php _e('Against Team') ?></h4>
@@ -62,12 +64,54 @@
         </th>
         <th></th>
     </tr>
-    <tr class="fp_stm_row_periods">
-        <td class="fp_stm_first_col"><input type="text" /></td>
-        <td class="fp_stm_period_col">x</td>
-        <td class="fp_stm_last_col"><input type="text" /></td>
-        <td class="fp_stm_remove_col"><a href="#fp_stm_sectionid" class="button-secondary">-</a></td>
+    <tr id="fp_stm_row_model" class="fp_stm_row_periods fp_stm_hidden">
+
+        <?php if($options['win_points']=='Win') : ?>
+            <td class="fp_stm_first_col"><input type="radio" /></td>
+            <td class="fp_stm_period_col">x</td>
+            <td class="fp_stm_last_col"><input type="radio" /></td>
+            <td class="fp_stm_remove_col"><a href="#fp_stm_sectionid" class="button-secondary">-</a></td>
+        <?php else : ?>
+            <td class="fp_stm_first_col"><input type="text" /></td>
+            <td class="fp_stm_period_col">x</td>
+            <td class="fp_stm_last_col"><input type="text" /></td>
+            <td class="fp_stm_remove_col"><a href="#fp_stm_sectionid" class="button-secondary">-</a></td>
+        <?php endif; ?>
+        
     </tr>
+
+    <?php //Creation of the periods already saved ?>
+    <?php $fp_stm_nbPeriods = get_post_meta($post->ID, 'fp_stm_nbPeriods', true); ?>
+
+    <?php for($i=1; $i <= $fp_stm_nbPeriods; $i++) : ?>
+        
+
+        <tr class="fp_stm_row_periods">
+            <?php if($options['win_points']=='Win') : ?>
+
+                <?php
+                    $fp_stm_score = get_post_meta($post->ID, 'fp_stm_'.$i, true);
+                ?>
+                <td class="fp_stm_first_col"><input type="radio" value="local" <?php if($fp_stm_score == 'local'){echo 'checked="checked"';} ?> /></td>
+                <td class="fp_stm_period_col">x</td>
+                <td class="fp_stm_last_col"><input type="radio" value="ennemy" <?php if($fp_stm_score == 'ennemy'){echo 'checked="checked"';} ?> /></td>
+                <td class="fp_stm_remove_col"><a href="#fp_stm_sectionid" class="button-secondary">-</a></td>
+
+            <?php else : ?>
+
+                <?php
+                    $fp_stm_local_score = get_post_meta($post->ID, 'fp_stm_local_'.$i, true);
+                    $fp_stm_ennemy_score = get_post_meta($post->ID, 'fp_stm_ennemy_'.$i, true);
+                ?>
+                <td class="fp_stm_first_col"><input type="text" value="<?php echo $fp_stm_local_score ?>" /></td>
+                <td class="fp_stm_period_col">x</td>
+                <td class="fp_stm_last_col"><input type="text" value="<?php echo $fp_stm_ennemy_score ?>" /></td>
+                <td class="fp_stm_remove_col"><a href="#fp_stm_sectionid" class="button-secondary">-</a></td>
+
+            <?php endif; ?>
+        </tr>
+    <?php endfor; ?>
+
     <tr id="fp_stm_final_row">
         <td colspan="4">
             <a href="#fp_stm_sectionid" class="button-primary fp_stm_right" id="fp_stm_add_row_btn"><?php _e('Add row'); ?></a>
@@ -76,3 +120,9 @@
 </table>
 
 <input type="hidden" value="" id="fp_stm_nbPeriods" name="fp_stm_nbPeriods" />
+
+<?php if($options['win_points']=='Win') : ?>
+    <input type="hidden" value="win" id="fp_stm_type" name="fp_stm_type" />
+<?php else : ?>
+    <input type="hidden" value="points" id="fp_stm_type" name="fp_stm_type" />
+<?php endif; ?>

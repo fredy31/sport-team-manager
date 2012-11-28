@@ -68,9 +68,13 @@
         
         add_settings_field('fp_stm_team_name', __('Team Name'), 'fp_stm_show_team_name', __FILE__, 'fp_stm_main_settings' );
         add_settings_field('fp_stm_team_abbr', __('Team Abbreviation'), 'fp_stm_show_team_abbr', __FILE__, 'fp_stm_main_settings' );
-        
+
+        //Period options        
         add_settings_field('fp_stm_win_or_points', __('Win or Number of points?'), 'fp_stm_show_win_or_points', __FILE__, 'fp_stm_main_settings' );
         add_settings_field('fp_stm_combine_or_innings', __('Win by combined points or innings won?'), 'fp_stm_show_combine_or_innings', __FILE__, 'fp_stm_main_settings' );
+
+        //Player stats options
+        add_settings_field('fp_stm_stats_perPeriod_completeGame', __('Player stats per period or per full game'), 'fp_stm_show_stats_perPeriod_completeGame', __FILE__, 'fp_stm_main_settings' );
     }
     
     /*
@@ -109,7 +113,7 @@
      */
     function fp_stm_show_team_abbr(){
         $options = get_option('fp_stm_admin_options');
-	echo "<label><input value='".$options["team_abbr"]."' name='plugin_options[team_abbr]' type='text' /></label><br />";
+	   echo "<label><input value='".$options["team_abbr"]."' name='plugin_options[team_abbr]' type='text' /></label><br />";
     }
     
     /*
@@ -117,11 +121,11 @@
      */
     function fp_stm_show_win_or_points(){
         $options = get_option('fp_stm_admin_options');
-	$items = array("Win", "Points");
-	foreach($items as $item) {
-		$checked = ($options['win_points']==$item) ? ' checked="checked" ' : '';
-		echo "<label><input ".$checked." value='$item' name='plugin_options[win_points]' type='radio' />$item</label><br />";
-	}
+    	$items = array("Win", "Points");
+    	foreach($items as $item) {
+    		$checked = ($options['win_points']==$item) ? ' checked="checked" ' : '';
+    		echo "<label><input ".$checked." value='$item' name='plugin_options[win_points]' type='radio' />$item</label><br />";
+    	}
     }
     
     /*
@@ -129,11 +133,25 @@
      */
     function fp_stm_show_combine_or_innings(){
         $options = get_option('fp_stm_admin_options');
-	$items = array("Combined", "Innings");
-	foreach($items as $item) {
-		$checked = ($options['comb_inn']==$item) ? ' checked="checked" ' : '';
-		echo "<label><input ".$checked." value='$item' name='plugin_options[comb_inn]' type='radio' />$item</label><br />";
-	}
+    	$items = array("Combined", "Innings");
+    	foreach($items as $item) {
+    		$checked = ($options['comb_inn']==$item) ? ' checked="checked" ' : '';
+    		echo "<label><input ".$checked." value='$item' name='plugin_options[comb_inn]' type='radio' />$item</label><br />";
+    	}
+    }
+
+    /*
+     * Creates the full game or per period (player stats) field (Radio button)
+     *
+     */
+
+    function fp_stm_show_stats_perPeriod_completeGame(){
+        $options = get_option('fp_stm_admin_options');
+        $items = array("Per period", "Full game");
+        foreach($items as $item) {
+            $checked = ($options['period_game']==$item) ? ' checked="checked" ' : '';
+            echo "<label><input ".$checked." value='$item' name='plugin_options[period_game]' type='radio' />$item</label><br />";
+        }
     }
     
     /*
